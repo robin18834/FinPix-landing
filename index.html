@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinPix — Auditoría Financiera para Propiedades Horizontales Colombianas</title>
+  <meta name="description" content="FinPix audita los estados financieros de tu propiedad horizontal en horas. Cada hallazgo incluye la norma infringida (Ley 675, NIIF, RPH) y la solución concreta. Documentos 100% confidenciales." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --azul:        #1a3a5c;
+      --azul-medio:  #2563a8;
+      --azul-claro:  #3b82f6;
+      --acento:      #f59e0b;
+      --verde:       #10b981;
+      --rojo:        #ef4444;
+      --gris-oscuro: #1f2937;
+      --gris:        #6b7280;
+      --gris-claro:  #f3f4f6;
+      --blanco:      #ffffff;
+      --sombra:      0 4px 24px rgba(26,58,92,0.12);
+    }
+
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--gris-oscuro); background: var(--blanco); line-height: 1.6; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(26,58,92,0.97);
+      backdrop-filter: blur(8px);
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+    }
+    .nav-logo { font-size: 1.5rem; font-weight: 800; color: var(--blanco); letter-spacing: -0.5px; }
+    .nav-logo span { color: var(--acento); }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    nav a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    nav a:hover { color: var(--acento); }
+    .nav-cta { background: var(--acento); color: var(--gris-oscuro) !important; padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem !important; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, var(--azul) 0%, #0f2744 50%, #1a3a5c 100%);
+      padding: 9rem 2rem 6rem; text-align: center; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -50%; left: -20%; width: 60%; height: 200%;
+      background: radial-gradient(ellipse, rgba(37,99,168,0.3) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.4);
+      color: var(--acento); padding: 0.35rem 1rem; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 800; color: var(--blanco);
+      line-height: 1.15; max-width: 860px; margin: 0 auto 1.5rem; letter-spacing: -0.5px;
+    }
+    .hero h1 .hl { color: var(--acento); }
+    .hero p { font-size: clamp(1rem, 2vw, 1.15rem); color: rgba(255,255,255,0.8); max-width: 660px; margin: 0 auto 2.5rem; }
+    .hero-cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--acento); color: var(--gris-oscuro); padding: 1rem 2rem; border-radius: 8px;
+      font-size: 1rem; font-weight: 800; text-decoration: none; display: inline-block;
+      transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(245,158,11,0.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,158,11,0.5); }
+    .btn-secondary {
+      background: transparent; color: var(--blanco); padding: 1rem 2rem; border-radius: 8px;
+      font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block;
+      border: 2px solid rgba(255,255,255,0.4); transition: border-color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--blanco); }
+    .hero-stats { display: flex; gap: 3rem; justify-content: center; margin-top: 3.5rem; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 2rem; font-weight: 800; color: var(--acento); display: block; }
+    .hero-stat .label { font-size: 0.78rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* NORMATIVA STRIP */
+    .normas-strip {
+      background: var(--azul); color: rgba(255,255,255,0.85);
+      padding: 0.85rem 2rem; text-align: center; font-size: 0.85rem;
+    }
+    .normas-strip strong { color: var(--acento); }
+
+    /* SECTIONS */
+    section { padding: 5rem 2rem; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-label {
+      display: inline-block; background: rgba(37,99,168,0.1); color: var(--azul-medio);
+      padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem;
+    }
+    .section-header h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; color: var(--azul); }
+
+    /* PROBLEMA */
+    .problema { background: var(--gris-claro); }
+    .problema .section-header p { max-width: 680px; margin: 0.75rem auto 0; color: var(--gris); font-size: 1rem; }
+    .problema-cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem; max-width: 960px; margin: 2.5rem auto 0;
+    }
+    .problema-card {
+      background: var(--blanco); border-radius: 12px; padding: 1.5rem;
+      box-shadow: var(--sombra); border-left: 4px solid var(--rojo);
+    }
+    .problema-card .icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    .problema-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--azul); }
+    .problema-card p { font-size: 0.88rem; color: var(--gris); }
+
+    /* REPORTE */
+    .reporte { background: var(--blanco); }
+    .reporte-intro { max-width: 680px; margin: 0 auto 3rem; text-align: center; color: var(--gris); font-size: 1rem; }
+    .reporte-steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem; max-width: 1000px; margin: 0 auto;
+    }
+    .reporte-step {
+      border: 1px solid rgba(37,99,168,0.15); border-radius: 14px; padding: 1.75rem;
+      transition: transform 0.2s, box-shadow 0.2s; background: linear-gradient(135deg, #f8faff, var(--blanco));
+    }
+    .reporte-step:hover { transform: translateY(-4px); box-shadow: var(--sombra); }
+    .step-num {
+      width: 40px; height: 40px; background: var(--azul); color: var(--blanco);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1rem; margin-bottom: 1rem;
+    }
+    .reporte-step h3 { font-size: 0.95rem; font-weight: 700; color: var(--azul); margin-bottom: 0.4rem; }
+    .reporte-step p { font-size: 0.85rem; color: var(--gris); }
+
+    /* SEMÁFORO DEMO */
+    .semaforo-demo { max-width: 760px; margin: 3rem auto 0; border-radius: 16px; overflow: hidden; box-shadow: var(--sombra); border: 1px solid rgba(37,99,168,0.12); }
+    .semaforo-header { background: var(--azul); color: var(--blanco); padding: 1rem 1.5rem; font-weight: 700; font-size: 0.95rem; }
+    .semaforo-item { padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; gap: 1rem; align-items: flex-start; }
+    .semaforo-item:last-child { border-bottom: none; }
+    .badge-rojo, .badge-verde {
+      flex-shrink: 0; padding: 0.25rem 0.65rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge-rojo { background: rgba(239,68,68,0.12); color: var(--rojo); }
+    .badge-verde { background: rgba(16,185,129,0.12); color: var(--verde); }
+    .semaforo-content h4 { font-size: 0.9rem; font-weight: 700; color: var(--gris-oscuro); margin-bottom: 0.2rem; }
+    .semaforo-content p { font-size: 0.82rem; color: var(--gris); }
+    .semaforo-content .norma { font-size: 0.78rem; color: var(--azul-medio); margin-top: 0.2rem; font-style: italic; }
+
+    /* CÓMO FUNCIONA */
+    .como { background: var(--gris-claro); }
+    .pasos {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem; max-width: 960px; margin: 0 auto;
+    }
+    .paso { background: var(--blanco); border-radius: 14px; padding: 2rem; text-align: center; box-shadow: var(--sombra); }
+    .paso-num {
+      width: 48px; height: 48px; background: var(--azul); color: var(--blanco);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 800; margin: 0 auto 1rem;
+    }
+    .paso-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .paso h3 { font-size: 1rem; font-weight: 700; color: var(--azul); margin-bottom: 0.5rem; }
+    .paso p { font-size: 0.88rem; color: var(--gris); }
+
+    /* NORMATIVA */
+    .normativa { background: var(--azul); }
+    .normativa .section-header h2 { color: var(--blanco); }
+    .normativa .section-label { background: rgba(245,158,11,0.2); color: var(--acento); }
+    .norma-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem; max-width: 960px; margin: 0 auto;
+    }
+    .norma-card {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 1.5rem; transition: background 0.2s;
+    }
+    .norma-card:hover { background: rgba(255,255,255,0.12); }
+    .norma-card .icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    .norma-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--acento); margin-bottom: 0.4rem; }
+    .norma-card p { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+
+    /* TESTIMONIOS */
+    .testimonios { background: var(--blanco); }
+    .test-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem; max-width: 960px; margin: 0 auto;
+    }
+    .test-card { background: var(--gris-claro); border-radius: 14px; padding: 2rem; position: relative; }
+    .test-card::before {
+      content: '"'; font-size: 4rem; color: var(--azul-claro); opacity: 0.15;
+      position: absolute; top: 1rem; left: 1.5rem; line-height: 1; font-family: Georgia, serif;
+    }
+    .test-card p { font-size: 0.93rem; font-style: italic; color: var(--gris-oscuro); margin-bottom: 1.25rem; position: relative; }
+    .test-autor { display: flex; align-items: center; gap: 0.75rem; }
+    .test-avatar {
+      width: 42px; height: 42px; background: var(--azul); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; color: var(--blanco); font-weight: 700; font-size: 1rem; flex-shrink: 0;
+    }
+    .test-info strong { display: block; font-size: 0.9rem; color: var(--azul); }
+    .test-info span { font-size: 0.8rem; color: var(--gris); }
+
+    /* PRIVACIDAD */
+    .privacidad {
+      background: linear-gradient(135deg, #0f2744 0%, var(--azul) 100%);
+      padding: 4rem 2rem; text-align: center;
+    }
+    .priv-grid { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; }
+    .priv-item { color: var(--blanco); text-align: center; max-width: 200px; }
+    .priv-item .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .priv-item p { font-size: 0.85rem; color: rgba(255,255,255,0.75); }
+
+    /* CTA FINAL */
+    .cta-final {
+      background: linear-gradient(135deg, var(--azul-medio) 0%, var(--azul) 100%);
+      padding: 6rem 2rem; text-align: center;
+    }
+    .cta-final h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; color: var(--blanco); margin-bottom: 1rem; }
+    .cta-final p { color: rgba(255,255,255,0.8); max-width: 500px; margin: 0 auto 2rem; font-size: 1.05rem; }
+    .cta-note { margin-top: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+    /* FOOTER */
+    footer { background: var(--gris-oscuro); color: rgba(255,255,255,0.5); text-align: center; padding: 2rem; font-size: 0.85rem; }
+    footer strong { color: rgba(255,255,255,0.8); }
+
+    /* PARA QUIÉN */
+    .para-quien { background: var(--blanco); }
+    .stakeholder-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.5rem; max-width: 1040px; margin: 0 auto;
+    }
+    .stakeholder-card {
+      background: var(--gris-claro); border-radius: 14px; padding: 1.75rem;
+      border-top: 4px solid rgba(37,99,168,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stakeholder-card:hover { transform: translateY(-3px); box-shadow: var(--sombra); }
+    .stakeholder-highlight { background: #eef4ff; border-top-color: var(--azul-medio); }
+    .stakeholder-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .stakeholder-card h3 { font-size: 1rem; font-weight: 800; color: var(--azul); margin-bottom: 0.5rem; }
+    .stakeholder-need {
+      display: inline-block; background: rgba(239,68,68,0.1); color: var(--rojo);
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 0.2rem 0.6rem; border-radius: 50px; margin-bottom: 0.6rem;
+    }
+    .stakeholder-card p { font-size: 0.88rem; color: var(--gris); margin-bottom: 1rem; }
+    .stakeholder-result {
+      font-size: 0.82rem; color: var(--verde); font-weight: 600;
+      background: rgba(16,185,129,0.08); border-radius: 8px; padding: 0.6rem 0.8rem;
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 0.75rem 1.25rem; }
+      nav a:not(.nav-cta) { display: none; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+      .hero-stats { gap: 1.5rem; }
+      section { padding: 3.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Fin<span>Pix</span></div>
+  <div class="nav-links">
+    <a href="#como">¿Cómo funciona?</a>
+    <a href="#normativa">Normativa</a>
+    <a href="#cta" class="nav-cta">Solicitar Auditoría</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Servicio Profesional de Auditoría con IA</div>
+  <h1>Auditoría financiera para tu propiedad horizontal — <span class="hl">resultados en horas, no semanas</span></h1>
+  <p>Servicio <strong>mensual recurrente</strong> de auditoría con IA para Consejos de Administración. Antes de cada reunión del Consejo, entregamos un reporte con cada hallazgo, la <strong>norma exacta infringida</strong> (Ley 675, NIIF, RPH, Manual de Convivencia) y la solución concreta. Tus documentos nunca salen de nuestro equipo.</p>
+  <div class="hero-cta-group">
+    <a href="#cta" class="btn-primary">SOLICITA TU PRIMERA AUDITORÍA GRATIS</a>
+    <a href="#como" class="btn-secondary">Ver cómo funciona</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num">Mensual</span><span class="label">Servicio recurrente</span></div>
+    <div class="hero-stat"><span class="num">Horas</span><span class="label">vs semanas tradicional</span></div>
+    <div class="hero-stat"><span class="num">5</span><span class="label">Elementos por hallazgo</span></div>
+    <div class="hero-stat"><span class="num">4+</span><span class="label">Marcos normativos</span></div>
+    <div class="hero-stat"><span class="num">100%</span><span class="label">Ejecución local — privado</span></div>
+  </div>
+</section>
+
+<!-- NORMAS STRIP -->
+<div class="normas-strip">
+  Cubrimos: <strong>Ley 675/2001</strong> &nbsp;·&nbsp; <strong>NIIF para pymes</strong> &nbsp;·&nbsp; <strong>RPH del conjunto</strong> &nbsp;·&nbsp; <strong>Manual de Convivencia</strong> &nbsp;·&nbsp; Circulares de Superintendencia de Sociedades
+</div>
+
+<!-- PROBLEMA -->
+<section class="problema">
+  <div class="section-header">
+    <div class="section-label">El problema</div>
+    <h2>¿Cómo apruebas las cuentas del conjunto cada mes sin ser contador?</h2>
+    <p>Los Consejos de Administración de propiedades horizontales colombianas aprueban estados financieros mes a mes — y enfrentan estos problemas:</p>
+  </div>
+  <div class="problema-cards">
+    <div class="problema-card">
+      <div class="icon">👥</div>
+      <h3>Copropietarios que cuestionan</h3>
+      <p>En cada asamblea alguien pregunta por qué se gastó X o si tal decisión estaba dentro del presupuesto aprobado. Sin respaldo normativo, es difícil responder.</p>
+    </div>
+    <div class="problema-card">
+      <div class="icon">📚</div>
+      <h3>Normativa compleja y múltiple</h3>
+      <p>La gestión de un conjunto debe cumplir Ley 675, NIIF, el RPH propio del conjunto y el Manual de Convivencia — cuatro marcos normativos simultáneos.</p>
+    </div>
+    <div class="problema-card">
+      <div class="icon">💰</div>
+      <h3>Revisoría fiscal costosa</h3>
+      <p>Contratar un contador o revisor fiscal para una auditoría completa puede costar entre $1 y $3 millones — inaccesible para muchos conjuntos de tamaño mediano.</p>
+    </div>
+    <div class="problema-card">
+      <div class="icon">⚠️</div>
+      <h3>Errores que no se detectan</h3>
+      <p>Inconsistencias en extractos, facturas duplicadas o gastos sin soporte pasan desapercibidos hasta que generan conflictos legales entre copropietarios.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUIÉN -->
+<section class="para-quien">
+  <div class="section-header">
+    <div class="section-label">¿Para quién es FinPix?</div>
+    <h2>Un solo reporte que responde a los 4 actores del conjunto</h2>
+  </div>
+  <div class="stakeholder-grid">
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🏢</div>
+      <h3>El Conjunto</h3>
+      <div class="stakeholder-need">Necesita</div>
+      <p>Evidencia de cumplimiento normativo para <strong>evitar sanciones</strong> de la Superintendencia de Sociedades.</p>
+      <div class="stakeholder-result">✅ FinPix verifica el cumplimiento de Ley 675, NIIF y RPH con citas exactas de cada artículo.</div>
+    </div>
+    <div class="stakeholder-card stakeholder-highlight">
+      <div class="stakeholder-icon">👔</div>
+      <h3>Consejo de Administración</h3>
+      <div class="stakeholder-need">Necesita</div>
+      <p><strong>Tranquilidad</strong> de que el manejo financiero del conjunto se está ejecutando correctamente.</p>
+      <div class="stakeholder-result">✅ FinPix entrega un reporte imparcial que confirma qué está bien y qué debe corregirse.</div>
+    </div>
+    <div class="stakeholder-card stakeholder-highlight">
+      <div class="stakeholder-icon">📋</div>
+      <h3>Administración</h3>
+      <div class="stakeholder-need">Necesita</div>
+      <p><strong>Certeza</strong> de que no se escapó ningún error contable ni irregularidad en los documentos revisados.</p>
+      <div class="stakeholder-result">✅ FinPix analiza el 100% de los documentos — sin fatiga, sin omisiones.</div>
+    </div>
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🗳️</div>
+      <h3>Asamblea de Copropietarios</h3>
+      <div class="stakeholder-need">Necesita</div>
+      <p><strong>Confianza</strong> para aprobar estados financieros que ya fueron auditados y no presentan anomalías.</p>
+      <div class="stakeholder-result">✅ La asamblea vota con respaldo de una auditoría documentada y verificada.</div>
+    </div>
+  </div>
+</section>
+
+<!-- REPORTE -->
+<section class="reporte">
+  <div class="section-header">
+    <div class="section-label">El reporte FinPix</div>
+    <h2>Cada hallazgo, estructurado en 5 elementos</h2>
+  </div>
+  <p class="reporte-intro">No entregamos un listado de errores genérico. Cada irregularidad que detecta FinPix viene con toda la información necesaria para entenderla, respaldarla y corregirla.</p>
+  <div class="reporte-steps">
+    <div class="reporte-step">
+      <div class="step-num">1</div>
+      <h3>Hallazgo</h3>
+      <p>Nombre claro de la irregularidad detectada — identificada y categorizada.</p>
+    </div>
+    <div class="reporte-step">
+      <div class="step-num">2</div>
+      <h3>Descripción</h3>
+      <p>Explicación del problema en lenguaje claro, sin tecnicismos innecesarios.</p>
+    </div>
+    <div class="reporte-step">
+      <div class="step-num">3</div>
+      <h3>Norma infringida</h3>
+      <p>Artículo exacto de Ley 675, NIIF, RPH del conjunto o Manual de Convivencia que se incumple.</p>
+    </div>
+    <div class="reporte-step">
+      <div class="step-num">4</div>
+      <h3>Sugerencia de solución</h3>
+      <p>Acción concreta y específica para corregir o subsanar la irregularidad encontrada.</p>
+    </div>
+    <div class="reporte-step">
+      <div class="step-num">5</div>
+      <h3>Documento fuente</h3>
+      <p>El archivo exacto (factura, extracto, acta, presupuesto) donde se encontró la anomalía.</p>
+    </div>
+  </div>
+
+  <!-- DEMO SEMÁFORO -->
+  <div class="semaforo-demo">
+    <div class="semaforo-header">Vista previa del reporte — ejemplo de hallazgos</div>
+    <div class="semaforo-item">
+      <span class="badge-rojo">● ROJO</span>
+      <div class="semaforo-content">
+        <h4>Gasto sin soporte en extracto bancario — mayo 2024</h4>
+        <p>Débito por $2.340.000 sin factura ni orden de compra adjunta en la carpeta de soportes contables del mes.</p>
+        <p class="norma">Ley 675/2001, Art. 51 · NIIF para pymes, Sección 2 · Documento: Extracto_Bancario_Mayo2024.pdf</p>
+      </div>
+    </div>
+    <div class="semaforo-item">
+      <span class="badge-rojo">● ROJO</span>
+      <div class="semaforo-content">
+        <h4>Anomalía estadística en cifras de nómina — Ley de Benford</h4>
+        <p>La distribución de los primeros dígitos en los pagos de nómina se aleja significativamente de la distribución esperada — patrón asociado a manipulación de cifras.</p>
+        <p class="norma">NIIF para pymes, Sección 28 · Documento: Nomina_Empleados_2024.xlsx</p>
+      </div>
+    </div>
+    <div class="semaforo-item">
+      <span class="badge-verde">● VERDE</span>
+      <div class="semaforo-content">
+        <h4>Presupuesto anual aprobado en asamblea — conforme</h4>
+        <p>El presupuesto 2024 fue aprobado con quórum válido. Los gastos ejecutados están dentro de los límites aprobados en el 94% de las partidas.</p>
+        <p class="norma">Ley 675/2001, Art. 38 · RPH del conjunto, Capítulo V · Documento: Acta_Asamblea_2024.pdf</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="como" id="como">
+  <div class="section-header">
+    <div class="section-label">Proceso simple</div>
+    <h2>Tres pasos para tener tu reporte</h2>
+  </div>
+  <div class="pasos">
+    <div class="paso">
+      <div class="paso-num">1</div>
+      <div class="paso-icon">📁</div>
+      <h3>Envías tus documentos</h3>
+      <p>Estados financieros, facturas, extractos bancarios, nóminas, actas de asamblea, presupuestos — en PDF, Word o Excel.</p>
+    </div>
+    <div class="paso">
+      <div class="paso-num">2</div>
+      <div class="paso-icon">🔒</div>
+      <h3>Analizamos localmente</h3>
+      <p>FinPix corre el análisis con IA en nuestro equipo. Tus documentos nunca se suben a servidores externos ni se comparten con terceros.</p>
+    </div>
+    <div class="paso">
+      <div class="paso-num">3</div>
+      <div class="paso-icon">📊</div>
+      <h3>Recibes tu reporte</h3>
+      <p>Informe ejecutivo con semáforo verde/rojo por hallazgo — cada uno con su norma y solución. Listo para presentar en asamblea.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NORMATIVA -->
+<section class="normativa" id="normativa">
+  <div class="section-header">
+    <div class="section-label">Cobertura normativa</div>
+    <h2>No solo Ley 675 — auditamos con todos los marcos aplicables</h2>
+  </div>
+  <div class="norma-grid">
+    <div class="norma-card">
+      <div class="icon">⚖️</div>
+      <h3>Ley 675/2001</h3>
+      <p>Régimen de propiedad horizontal colombiana. Artículos sobre asambleas, presupuestos, cuotas de administración, sanciones y obligaciones del administrador.</p>
+    </div>
+    <div class="norma-card">
+      <div class="icon">📊</div>
+      <h3>NIIF para pymes</h3>
+      <p>Estándares Internacionales de Información Financiera aplicables a copropiedades. Reconocimiento, medición y presentación de estados financieros.</p>
+    </div>
+    <div class="norma-card">
+      <div class="icon">🏢</div>
+      <h3>RPH del conjunto</h3>
+      <p>Reglamento de Propiedad Horizontal específico de tu conjunto. FinPix lo incorpora en el análisis para validar si las decisiones financieras cumplen las normas internas.</p>
+    </div>
+    <div class="norma-card">
+      <div class="icon">📋</div>
+      <h3>Manual de Convivencia</h3>
+      <p>Normas internas del conjunto relacionadas con el manejo de recursos, multas, sanciones económicas y obligaciones de los copropietarios.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonios">
+  <div class="section-header">
+    <div class="section-label">Lo que dicen los clientes</div>
+    <h2>Consejos de Administración que reciben su reporte cada mes</h2>
+  </div>
+  <div class="test-grid">
+    <div class="test-card">
+      <p>Por primera vez aprobé los estados financieros del mes entendiendo cada cifra y con respaldo legal. El reporte me llegó antes de la reunión del Consejo, listo para revisar.</p>
+      <div class="test-autor">
+        <div class="test-avatar">FG</div>
+        <div class="test-info">
+          <strong>Felipe G.</strong>
+          <span>Presidente del Consejo de Administración — Bogotá</span>
+        </div>
+      </div>
+    </div>
+    <div class="test-card">
+      <p>Encontró un gasto sin soporte de $2.3 millones que nadie había detectado en 8 meses. La solución que propuso era exactamente lo que necesitábamos hacer.</p>
+      <div class="test-autor">
+        <div class="test-avatar">MR</div>
+        <div class="test-info">
+          <strong>Mauricio R.</strong>
+          <span>Miembro del Consejo de Administración — Medellín</span>
+        </div>
+      </div>
+    </div>
+    <div class="test-card">
+      <p>Lo que más me tranquilizó fue saber que los estados financieros del conjunto nunca salieron de su equipo. Cada mes recibimos el reporte con la confianza intacta.</p>
+      <div class="test-autor">
+        <div class="test-avatar">CP</div>
+        <div class="test-info">
+          <strong>Carolina P.</strong>
+          <span>Presidenta del Consejo de Administración — Cali</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACIDAD -->
+<section class="privacidad">
+  <div class="section-header">
+    <div class="section-label" style="background:rgba(245,158,11,0.2);color:var(--acento);">Confidencialidad garantizada</div>
+    <h2 style="color:var(--blanco);">Tus documentos nunca salen de nuestro equipo</h2>
+  </div>
+  <div class="priv-grid">
+    <div class="priv-item">
+      <div class="icon">💻</div>
+      <p>Análisis 100% local — sin nube, sin servidores externos</p>
+    </div>
+    <div class="priv-item">
+      <div class="icon">🔐</div>
+      <p>Cifrado AES de extremo a extremo durante el proceso</p>
+    </div>
+    <div class="priv-item">
+      <div class="icon">🗑️</div>
+      <p>Los documentos se eliminan del equipo al entregar el reporte</p>
+    </div>
+    <div class="priv-item">
+      <div class="icon">🚫</div>
+      <p>Sin compartir con terceros, sin bases de datos, sin perfilado</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final" id="cta">
+  <h2>Empieza con tu primera auditoría gratis</h2>
+  <p>Tu primer mes es gratis. Envíanos los documentos financieros y antes de tu próxima reunión del Consejo recibes el reporte con semáforo verde/rojo, norma por norma, con la solución para cada hallazgo. Si te convence, continúas con el servicio mensual.</p>
+  <a href="mailto:rzunigam15@gmail.com?subject=Solicitud%20de%20Auditor%C3%ADa%20FinPix&body=Hola%2C%20me%20interesa%20solicitar%20una%20auditor%C3%ADa%20financiera%20para%20mi%20propiedad%20horizontal.%0A%0ANombre%20del%20conjunto%3A%0AUbicaci%C3%B3n%3A%0ADocumentos%20disponibles%3A" class="btn-primary">SOLICITA TU PRIMERA AUDITORÍA GRATIS</a>
+  <p class="cta-note">Confidencialidad garantizada &nbsp;·&nbsp; Sin compromiso &nbsp;·&nbsp; Resultados en horas</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>FinPix</strong> — Servicio Profesional de Auditoría Financiera para Propiedades Horizontales Colombianas</p>
+  <p style="margin-top:0.5rem;">Desarrollado por Robinzon Eduardo Zuñiga Montaño &nbsp;·&nbsp; rzunigam15@gmail.com</p>
+  <p style="margin-top:0.5rem;font-size:0.75rem;">Ley 675/2001 · NIIF para pymes · RPH · Manual de Convivencia &nbsp;·&nbsp; Colombia 2026</p>
+</footer>
+
+</body>
+</html>
